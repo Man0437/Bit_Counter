@@ -1,0 +1,8 @@
+all:
+    gcc main.c -o countbits
+
+clean:
+    rm -rf *.o countbits
+
+
+test: program
