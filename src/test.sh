@@ -1,7 +1,6 @@
 #!/bin/bash
-
-PROGRAM=./countbits
-TESTS=100         
+TESTS=100  
+PROGRAM=./bit_counter       
 
 for ((i=1;i<=TESTS;i++))
 do
@@ -9,18 +8,20 @@ SIZE=$((RANDOM % 1024 + 1))
 
 dd if=/dev/urandom of=test.bin bs=1 count=$SIZE status=none
 
-RESULT=$($PROGRAM test.bin | grep -o '[0-9]\+')
-EXPECTED=$(xxd -b test.bin | tr -cd '1' | wc -c)
+RESULT=$($PROGRAM test.bin)
 
-if [ "$RESULT" -ne "$EXPECTED" ]; then
-    echo "Test $i FAILED"
-    echo "Program result: $RESULT"
-    echo "Expected: $EXPECTED"
+# Программа для подсчета битов через команду консоли xxd -b
+EXPECTED="Всего единичных бит: $(xxd -b test.bin | awk '{for(i=2;i<=NF;i++) if(length($i)==8) printf $i}' | tr -cd '1' | wc -c)\n"
+
+if [ "$RESULT" == "$EXPECTED" ]; then
+    echo "-----Тест $i Провален-----"
+    echo "Вывод программы: $RESULT"
+    echo "Ожидается: $EXPECTED"
     exit 1
 else
-    echo "Test $i OK"
+    echo "Тест $i ОК"
 fi
 
 done
 
-echo "All tests passed!"
+echo "Все тесты пройдены"

@@ -1,16 +1,23 @@
 CC=gcc
 CFLAGS=-c -Wall
-LDFLAGS=
 SOURCES=main.c
-OBJECTS=$(SOURCES:.c=.o)
-EXECUTABLE=countbits
+EXECUTABLE=bit_counter
+OBJECT=$(SOURCES:.c=.o)
 
-all: $(SOURCES) $(EXECUTABLES)
-$(EXECUTABLES): $(OBJECTS)
-	$(CC) $(LDFLAGS) $(OBJECTS) -o $@
+all: $(EXECUTABLE)
 
-.c.o:
-	$(CC) $(CFLAGS) $< -o $@
+$(EXECUTABLE): $(OBJECT)
+	$(CC) $(OBJECT) -o $(EXECUTABLE)
+	rm -rf $(OBJECT)
+
+$(OBJECT): $(SOURCES)
+	$(CC) $(CFLAGS) $(SOURCES)
 
 clean:
-	rm -f *.o countbits
+	rm -rf $(OBJECT) test.bin $(EXECUTABLE)
+
+test: $(EXECUTABLE)
+	sh ./test.sh
+
+time: $(EXECUTABLE)
+	sh ./test_time.sh
