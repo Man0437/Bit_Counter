@@ -15,9 +15,10 @@ $(OBJECT): $(SOURCES)
 
 clean:
 	rm -rf $(OBJECT) test.bin $(EXECUTABLE)
-
+# Команда для тестирования правильности значений
 test: $(EXECUTABLE)
 	sh ./test.sh
 
+# Команда для тестирования времени выполнения
 time: $(EXECUTABLE)
 	sh ./test_time.sh

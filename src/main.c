@@ -5,8 +5,8 @@ typedef unsigned char u8;
 typedef unsigned int u32;
 typedef unsigned long long u64;
 
-
-u8 CountOnes3_x64_m ( u32 n ) {    
+// Алгоритм для подсчета битов
+u32 CountOnes(u32 n) {    
     if (n+1 == 0)  return 32;
     u64 res = (n&0xFFF)*0x1001001001001llu & 0x84210842108421llu;
     res += ((n&0xFFF000)>>12)*0x1001001001001llu & 0x84210842108421llu;
@@ -23,11 +23,12 @@ long read_file(char* file_name){
     
     
     u8 buffer[65536];
+
     long total = 0;
-    size_t n;
-    while ((n = fread(buffer, 1, sizeof(buffer), file)) > 0) {
-        for (size_t i = 0; i < n; i++)
-            total += CountOnes3_x64_m(buffer[i]);
+    size_t count_buf;
+    while ((count_buf = fread(buffer, 1, sizeof(buffer), file)) > 0) {
+        for (size_t i = 0; i < count_buf; i++)
+            total += CountOnes(buffer[i]);
     } 
     fclose(file);
     printf("Всего единичных бит: %ld\n", total);
