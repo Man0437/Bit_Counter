@@ -2,16 +2,19 @@
 #include <stdio.h>
 
 typedef unsigned char u8;
+typedef unsigned short u16;
 typedef unsigned int u32;
 typedef unsigned long long u64;
 
 // Алгоритм для подсчета битов
-u32 CountOnes(u32 n) {    
-    if (n+1 == 0)  return 32;
-    u64 res = (n&0xFFF)*0x1001001001001llu & 0x84210842108421llu;
-    res += ((n&0xFFF000)>>12)*0x1001001001001llu & 0x84210842108421llu;
-    res += (n>>24)*0x1001001001001llu & 0x84210842108421llu;
-    return (res*0x84210842108421llu >> 55) & 0x1F;
+
+// Метод при котором получается 8853ms при подсчете 2,4G на компиляторе gcc
+// Паралельный метод
+u8 CountOnes(u8 n) {
+  n = ((n>>1) & 0x55) + (n & 0x55);
+  n = ((n>>2) & 0x33) + (n & 0x33);
+  n = ((n>>4) & 0x0F) + (n & 0x0F);
+  return n;
 }
 
 long read_file(char* file_name){
@@ -31,7 +34,9 @@ long read_file(char* file_name){
             total += CountOnes(buffer[i]);
     } 
     fclose(file);
-    printf("Всего единичных бит: %ld\n", total);
+
+    // Вывод числа битов в файле
+    printf("%ld\n", total);
     return total;
 }
 
