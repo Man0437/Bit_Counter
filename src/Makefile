@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-c -Wall
+CFLAGS=-c -Wall -O2
 SOURCES=main.c
 EXECUTABLE=bit_counter
 OBJECT=$(SOURCES:.c=.o)
